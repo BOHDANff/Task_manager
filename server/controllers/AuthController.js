@@ -1,9 +1,16 @@
 import AuthService from "../service/AuthService.js";
+import {validationResult} from "express-validator";
+import ApiError from "../exceptions/ApiError.js";
+
 
 
 class AuthController {
     async registration(req, res, next) {
         try {
+            const validationErrors = validationResult(req)
+            if(!validationErrors.isEmpty()) {
+                return next(ApiError.BadRequest('Validation error', validationErrors.array()))
+            }
             const {email, password, username} = req.body
             const userData = await AuthService.registration(email, password, username)
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 23 * 60 * 60 * 100, httpOnly: true}) //maxAge: 30d
@@ -15,7 +22,10 @@ class AuthController {
 
     async login(req, res, next) {
         try {
-
+            const {email, password} = req.body
+            const userData = await AuthService.login(email, password)
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 23 * 60 * 60 * 100, httpOnly: true}) //maxAge: 30d
+            return res.json(userData)
         } catch (e) {
             next(e)
         }
@@ -23,7 +33,10 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
-
+            const {refreshToken} = req.cookies
+            const token = await AuthService.logout(refreshToken)
+            res.clearCookie('refreshToken')
+            return res.json(token)
         } catch (e) {
             next(e)
         }

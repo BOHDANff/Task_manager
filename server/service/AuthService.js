@@ -1,5 +1,5 @@
 import User from "../models/UserModel.js";
-import {hash} from "bcrypt";
+import {compare, hash} from "bcrypt";
 import {v4} from "uuid";
 import MailService from "./MailService.js";
 import TokenService from "./TokenService.js";
@@ -22,17 +22,37 @@ class AuthService {
         const userDto = new UserDto(user)
         const tokens = TokenService.generateToken({...userDto})
         await TokenService.saveToken(userDto.id, tokens.refreshToken)
-        return { ...tokens, user: userDto}
-     }
+        return {...tokens, user: userDto}
+    }
 
-     async confirm(confirmationLink) {
-         const user = await User.findOne({confirmationLink})
-         if (!user) {
-             throw ApiError.BadRequest(`Incorrect confirmation link`)
-         }
-         user.confirmedAt = true
-         await user.save()
-     }
+    async confirm(confirmationLink) {
+        const user = await User.findOne({confirmationLink})
+        if (!user) {
+            throw ApiError.BadRequest(`Incorrect confirmation link`)
+        }
+        user.confirmedAt = true
+        await user.save()
+    }
+
+    async login(email, password) {
+        const user = await User.findOne({email})
+        if (!user) {
+            throw ApiError.BadRequest('Wrong email or password')
+        }
+        const isPswrdRight = compare(password, user.password)
+        if (!isPswrdRight) {
+            throw ApiError.BadRequest('Wrong email or password')
+        }
+        const userDto = new UserDto(user)
+        const tokens = TokenService.generateToken({...userDto})
+        await TokenService.saveToken(userDto.id, tokens.refreshToken)
+        return {...tokens, user: userDto}
+    }
+
+    async logout(refreshToken) {
+        const token = await TokenService.deleteToken(refreshToken)
+        return token
+    }
 }
 
 export default new AuthService()
