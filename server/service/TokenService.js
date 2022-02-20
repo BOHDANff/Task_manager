@@ -25,6 +25,20 @@ class TokenService {
         const token = await TokenModel.deleteOne({refreshToken})
         return token
     }
+
+    validateRefreshToken(refreshToken) {
+        try {
+            const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY)
+            return userData
+        } catch (e) {
+            return null
+        }
+    }
+
+    async findToken(refreshToken) {
+        const token = await TokenModel.findOne({refreshToken})
+        return token
+    }
 }
 
 export default new TokenService()

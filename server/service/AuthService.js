@@ -8,6 +8,13 @@ import ApiError from "../exceptions/ApiError.js";
 
 
 class AuthService {
+    async generateAndSaveToken(user) {
+        const userDto = new UserDto(user)
+        const tokens = TokenService.generateToken({...userDto})
+        await TokenService.saveToken(userDto.id, tokens.refreshToken)
+        return {...tokens, user: userDto}
+    }
+
     async registration(email, password, username) {
         const candidate = await User.findOne({email})
         if (candidate) {
@@ -19,10 +26,8 @@ class AuthService {
         const user = await User.create({email, password: hashedPassword, confirmationLink, username})
         await MailService.sendActivationMail(email, `${process.env.API_URL}/auth/confirm/${confirmationLink}`)
 
-        const userDto = new UserDto(user)
-        const tokens = TokenService.generateToken({...userDto})
-        await TokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, user: userDto}
+        const userData = await this.generateAndSaveToken(user)
+        return userData
     }
 
     async confirm(confirmationLink) {
@@ -43,15 +48,27 @@ class AuthService {
         if (!isPswrdRight) {
             throw ApiError.BadRequest('Wrong email or password')
         }
-        const userDto = new UserDto(user)
-        const tokens = TokenService.generateToken({...userDto})
-        await TokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, user: userDto}
+        const userData = await this.generateAndSaveToken(user)
+        return userData
     }
 
     async logout(refreshToken) {
         const token = await TokenService.deleteToken(refreshToken)
         return token
+    }
+
+    async refresh(refreshToken) {
+        if(!refreshToken) {
+            return new ApiError.UnauthorizedError()
+        }
+        const tokenData = TokenService.validateRefreshToken(refreshToken)
+        const tokenFromDB = await TokenService.findToken(refreshToken)
+        if (!tokenData || !tokenFromDB){
+            return new ApiError.UnauthorizedError()
+        }
+        const user = await User.findOne({refreshToken})
+        const userData = await this.generateAndSaveToken(user)
+        return userData
     }
 }
 
