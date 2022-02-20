@@ -4,13 +4,19 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import mongoose from "mongoose";
 import authRouter from "./router/AuthRoute.js";
+import ErrorMiddleware from "./middlewares/ErrorMiddleware.js";
 
 const PORT = process.env.PORT || 6000
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: process.env.CLIENT_URL
+}))
 app.use('/auth', authRouter)
+app.use(ErrorMiddleware)
+
 const start = async () => {
   try {
     await mongoose.connect(process.env.DB_URL, {
