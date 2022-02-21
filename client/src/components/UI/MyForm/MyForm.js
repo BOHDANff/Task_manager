@@ -1,5 +1,5 @@
 import React from "react";
-import cl from "./MyForm.modal.css"
+import cl from "./MyForm.module.css"
 
 export const MyForm = ({children, ...props}) => {
     return (

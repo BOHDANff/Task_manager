@@ -7,7 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
 import {Link} from "@mui/material";
 
-const SignInForm = (props) => {
+const SignUpForm = (props) => {
     const schema = yup.object().shape({
         email: yup
             .string()
@@ -16,6 +16,9 @@ const SignInForm = (props) => {
         password: yup
             .string()
             .min(6, 'Password cannot be less than 6 characters')
+            .required("This is a required field"),
+        username: yup
+            .string()
             .required("This is a required field"),
     })
 
@@ -30,7 +33,7 @@ const SignInForm = (props) => {
     }
     return (
         <>
-            <h1 style={{textAlign: "center"}}>Sign in</h1>
+            <h1 style={{textAlign: "center"}}>Sign up</h1>
             <MyForm onSubmit={handleSubmit(onSubmit)}>
                 <MyInput
                     {...register('email')}
@@ -41,6 +44,14 @@ const SignInForm = (props) => {
                     helperText={errors?.email?.message}
                 />
                 <MyInput
+                    {...register('username')}
+                    id="username"
+                    type="text"
+                    label="Your username"
+                    error={!!errors.username}
+                    helperText={errors?.username?.message}
+                />
+                <MyInput
                     {...register('password')}
                     id="password"
                     type="password"
@@ -48,13 +59,13 @@ const SignInForm = (props) => {
                     error={!!errors.password}
                     helperText={errors?.password?.message}
                 />
-                <MyFormButton style={{width: "70%", margin: "16px 0 20px"}}>Sign in</MyFormButton>
-                Don`t have the account?
-                Please <Link onClick={() => props.setSignInOrUp("up")}>Sign up</Link>
+                <MyFormButton style={{width: "70%", margin: "16px 0 20px"}}>Sign up</MyFormButton>
+                Already have the account?
+                Please <Link onClick={() => props.setSignInOrUp("in")}>Sign in</Link>
             </MyForm>
         </>
 
     );
 };
 
-export default SignInForm;
+export default SignUpForm;
