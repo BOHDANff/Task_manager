@@ -1,5 +1,6 @@
 .idea
-./client/node_modules
 
 # Project exclude paths
 /client/node_modules/
+/server/node_modules/
+/server/.env
