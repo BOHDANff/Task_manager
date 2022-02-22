@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {MyForm} from "../UI/MyForm/MyForm";
 import {MyInput} from "../UI/MyInput";
 import {MyFormButton} from "../UI/MyFormButton";
@@ -7,7 +7,8 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
 import {Link} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {signUp} from "../../store/reducers/actionCreators/AuthActionCreator";
+import {signIn, signUp} from "../../store/reducers/actionCreators/AuthActionCreator";
+import BasicModal from "../UI/MyModal";
 
 const SignUpForm = (props) => {
     const schema = yup.object().shape({
@@ -28,10 +29,18 @@ const SignUpForm = (props) => {
         mode: "onChange",
         resolver: yupResolver(schema),
     })
-    const isAuth = useSelector(state => state.auth.isAuth)
     const dispatch = useDispatch()
+    const [errorMessage, setErrorMessage] = useState('');
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false)
+    const isAuth = useSelector(state => state.auth.isAuth)
     const onSubmit = (user) => {
-        dispatch(signUp(user))
+        dispatch(signUp(user)).then((res) =>
+        {if (res.error) {
+            setErrorMessage(res.payload)
+            handleOpen()
+        }})
         reset()
     }
     return (isAuth
@@ -40,6 +49,7 @@ const SignUpForm = (props) => {
                 <h1 style={{marginTop: "20px"}}>Please go to your email and confirm it</h1>
             </div>
             : <>
+                <BasicModal open={open} onClose={handleClose}>{errorMessage}</BasicModal>
                 <h1 style={{textAlign: "center"}}>Sign up</h1>
                 <MyForm onSubmit={handleSubmit(onSubmit)}>
                     <MyInput

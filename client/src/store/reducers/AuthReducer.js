@@ -4,16 +4,12 @@ import {checkAuth, signIn, signOut, signUp} from "./actionCreators/AuthActionCre
 const initialState = {
     isAuth: false,
     user: {},
-    status: false,
-    errorMessage: ''
 }
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        isAuth(state, action) {
-        },
     },
     extraReducers: {
         [signIn.fulfilled]: (state, action) => {
@@ -23,17 +19,16 @@ export const authSlice = createSlice({
             console.log(action.payload)
         },
         [signIn.rejected]: (state, action) => {
-            state.errorMessage = `${action.payload}`
+            console.log(action.payload)
         },
         [signUp.fulfilled]: (state, action) => {
             localStorage.setItem('token', action.payload.accessToken)
             state.isAuth = true
             state.user = action.payload.user
             console.log(action.payload)
-            state.status = true
         },
         [signUp.rejected]: (state, action) => {
-            state.errorMessage = `${action.payload}`
+            console.log(action.payload)
         },
         [signOut.fulfilled]: (state, action) => {
             localStorage.removeItem('token')
@@ -55,5 +50,5 @@ export const authSlice = createSlice({
     }
 })
 
-
+export const {setErrorMessage} = authSlice.actions
 export default authSlice.reducer
