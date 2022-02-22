@@ -1,5 +1,5 @@
 import User from "../models/UserModel.js";
-import {compare, hash} from "bcrypt";
+import {compareSync, hash} from "bcrypt";
 import {v4} from "uuid";
 import MailService from "./MailService.js";
 import TokenService from "./TokenService.js";
@@ -19,6 +19,10 @@ class AuthService {
         const candidate = await User.findOne({email})
         if (candidate) {
             throw ApiError.BadRequest(`User with email ${email} has already existed`)
+        }
+        const isPasswordUnique = await User.findOne({username})
+        if (isPasswordUnique) {
+            throw ApiError.BadRequest(`User with username ${username} has already existed`)
         }
         const hashedPassword = await hash(password, 3)
         const confirmationLink = v4()
@@ -44,7 +48,7 @@ class AuthService {
         if (!user) {
             throw ApiError.BadRequest('Wrong email or password')
         }
-        const isPswrdRight = compare(password, user.password)
+        const isPswrdRight = compareSync(password, user.password)
         if (!isPswrdRight) {
             throw ApiError.BadRequest('Wrong email or password')
         }

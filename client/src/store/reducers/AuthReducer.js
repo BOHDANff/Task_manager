@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {signIn, signUp} from "./actionCreators/AuthActionCreators";
+import {signIn, signUp} from "./actionCreators/AuthActionCreator";
 
 const initialState = {
     isAuth: false,
@@ -29,5 +29,6 @@ export const authSlice = createSlice({
         },
     }
 })
+
 
 export default authSlice.reducer

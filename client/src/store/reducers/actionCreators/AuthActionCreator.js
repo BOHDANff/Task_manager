@@ -14,3 +14,16 @@ export const signIn = createAsyncThunk(
 
     }
 )
+
+export const signUp = createAsyncThunk(
+    'auth/signIn',
+    async (user, {rejectWithValue}) => {
+        try {
+            const response = await AuthService.signUp(user.email, user.password, user.username)
+            return response.data
+        } catch (e) {
+            return rejectWithValue(e.response?.data?.message)
+        }
+
+    }
+)

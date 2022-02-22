@@ -6,6 +6,8 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
 import {Link} from "@mui/material";
+import {useDispatch} from "react-redux";
+import {signUp} from "../../store/reducers/actionCreators/AuthActionCreator";
 
 const SignUpForm = (props) => {
     const schema = yup.object().shape({
@@ -26,9 +28,9 @@ const SignUpForm = (props) => {
         mode: "onChange",
         resolver: yupResolver(schema),
     })
-
+    const dispatch = useDispatch()
     const onSubmit = (user) => {
-        console.log(user)
+        dispatch(signUp(user))
         reset()
     }
     return (

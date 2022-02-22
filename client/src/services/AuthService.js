@@ -6,8 +6,8 @@ export default class AuthService {
         return $api.post('/login', {email, password})
     }
 
-    static async signUp(email, password) {
-        return $api.post('/registration', {email, password})
+    static async signUp(email, password, username) {
+        return $api.post('/registration', {email, password, username})
     }
 
     static async signOut() {
