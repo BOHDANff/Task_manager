@@ -28,7 +28,7 @@ class AuthService {
         const confirmationLink = v4()
 
         const user = await User.create({email, password: hashedPassword, confirmationLink, username})
-        await MailService.sendActivationMail(email, `${process.env.API_URL}/auth/confirm/${confirmationLink}`)
+        await MailService.sendActivationMail(email, `${process.env.API_URL}/api/auth/confirm/${confirmationLink}`)
 
         const userData = await this.generateAndSaveToken(user)
         return userData
