@@ -45,7 +45,7 @@ const SignInForm = (props) => {
     }
 
     useEffect(() => {
-        if (isAuth) {navigate(`/tasks/${user.id}`, {replace: true})}
+        if (isAuth) {navigate(`/tasks/${user.username}`, {replace: true})}
     }, [isAuth])
 
     return (<>

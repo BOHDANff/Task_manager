@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import mongoose from "mongoose";
 import authRouter from "./router/AuthRoute.js";
 import ErrorMiddleware from "./middlewares/ErrorMiddleware.js";
+import taskRouter from "./router/TaskRoute.js";
 
 const PORT = process.env.PORT || 6000
 const app = express()
@@ -15,6 +16,7 @@ app.use(cors({
   origin: process.env.CLIENT_URL
 }))
 app.use('/api/auth', authRouter)
+app.use('/api/task', taskRouter)
 app.use(ErrorMiddleware)
 
 const start = async () => {
