@@ -1,17 +1,12 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React from 'react';
+import {useSelector} from "react-redux";
 import {Navigate} from 'react-router-dom'
-import {checkAuth} from "../store/reducers/actionCreators/AuthActionCreator";
 
 const PrivatePath = ({children}) => {
-    const dispatch = useDispatch()
-    const isAuth = useSelector(state => state.auth.isAuth)
-    useEffect(() => {
-        dispatch(checkAuth())
-    }, [isAuth])
+    // const isAuth = useSelector(state => state.auth.isAuth)
 
-    if (!isAuth) {
-        return <Navigate to="/" />
+    if (!localStorage.getItem('token')) {
+        return <Navigate to="/auth" />
     }
     return children
 };
