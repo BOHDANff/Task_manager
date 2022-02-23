@@ -63,12 +63,12 @@ class AuthService {
 
     async refresh(refreshToken) {
         if(!refreshToken) {
-            return new ApiError.UnauthorizedError()
+            throw ApiError.UnauthorizedError()
         }
         const tokenData = TokenService.validateRefreshToken(refreshToken)
         const tokenFromDB = await TokenService.findToken(refreshToken)
         if (!tokenData || !tokenFromDB){
-            return new ApiError.UnauthorizedError()
+            throw ApiError.UnauthorizedError()
         }
         const user = await User.findOne({refreshToken})
         const userData = await this.generateAndSaveToken(user)
