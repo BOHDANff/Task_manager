@@ -36,7 +36,7 @@ const SignUpForm = (props) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false)
-    const {isAuth, user} = useSelector(state => state.auth)
+    const {isAuth, user, isLoading} = useSelector(state => state.auth)
 
     const onSubmit = (user) => {
         dispatch(signUp(user)).then((res) =>
@@ -47,11 +47,12 @@ const SignUpForm = (props) => {
         reset()
     }
     useEffect(() => {
-        if (isAuth) {navigate(`/tasks/${user.id}`, {replace: true})}
+        if (isAuth) {navigate(`/tasks/${user.username}`, {replace: true})}
     }, [isAuth])
 
-    return (<>
-                <BasicModal open={open} onClose={handleClose}>{errorMessage}</BasicModal>
+    return (isLoading
+            ? <></>
+            : <><BasicModal open={open} onClose={handleClose}>{errorMessage}</BasicModal>
                 <h1 style={{textAlign: "center"}}>Sign up</h1>
                 <MyForm onSubmit={handleSubmit(onSubmit)}>
                     <MyInput
@@ -81,8 +82,8 @@ const SignUpForm = (props) => {
                     <MyFormButton style={{width: "70%", margin: "16px 0 20px"}}>Sign up</MyFormButton>
                     Already have the account?
                     Please <Link onClick={() => props.setSignInOrUp("in")}>Sign in</Link>
-                </MyForm>
-            </>
-    )}
+                </MyForm></>
+    )
+}
 
 export default SignUpForm;

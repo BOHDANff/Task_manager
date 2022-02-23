@@ -6,7 +6,7 @@ const PrivatePath = ({children}) => {
     // const isAuth = useSelector(state => state.auth.isAuth)
 
     if (!localStorage.getItem('token')) {
-        return <Navigate to="/auth" />
+        return <Navigate to="/" />
     }
     return children
 };

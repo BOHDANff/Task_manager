@@ -4,8 +4,10 @@ import {useSelector} from "react-redux";
 import TaskList from "./TaskList";
 
 const MainPage = () => {
-    const {user} = useSelector(state => state.auth)
-    return (user.confirmedAt
+    const {user, isLoading} = useSelector(state => state.auth)
+    return (isLoading
+            ? <> </>
+            : user.confirmedAt
             ? <>
                 <Navbar/>
                 <TaskList/>
