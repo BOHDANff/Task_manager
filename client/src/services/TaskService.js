@@ -7,18 +7,18 @@ export default class TaskService {
     }
 
     static async getOne(id) {
-        return $api.post(`task/one/${id}`)
+        return $api.get(`task/one/${id}`)
     }
 
-    static async create(userId,task) {
+    static async create(task, userId) {
         return $api.post(`task/create/${userId}`, task)
     }
 
-    static async edit(id, task) {
-        return $api.post(`task/edit/${id}`, task)
+    static async edit(task) {
+        return $api.put(`task/edit`, task)
     }
 
     static async delete(id) {
-        return $api.post(`task/delete/${id}`)
+        return $api.delete(`task/delete/${id}`)
     }
 }

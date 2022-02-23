@@ -23,7 +23,7 @@ class TaskController {
     async create(req, res, next){
         try {
             const post = await TaskService.create(req.body, req.params.userId)
-            res.json(post)
+            return res.json(post)
         } catch (e) {
             res.status(500).json(e)
         }

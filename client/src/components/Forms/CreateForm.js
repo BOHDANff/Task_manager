@@ -5,8 +5,10 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {MyForm} from "../UI/MyForm/MyForm";
 import {MyInput} from "../UI/MyInput";
 import {MyFormButton} from "../UI/MyFormButton";
+import {useDispatch, useSelector} from "react-redux";
+import {createTask} from "../../store/reducers/actionCreators/TaskActionCreator";
 
-const CreateForm = () => {
+const CreateForm = (props) => {
     const schema = yup.object().shape({
         title: yup
             .string()
@@ -26,9 +28,12 @@ const CreateForm = () => {
         mode: "onChange",
         resolver: yupResolver(schema),
     })
-
+    const dispatch = useDispatch()
+    const userId = useSelector(state => state.auth.user.id)
     const onSubmit = (task) => {
-      reset()
+        dispatch(createTask({task, userId}))
+        reset()
+        props.onClose()
     }
     return (
         <>
