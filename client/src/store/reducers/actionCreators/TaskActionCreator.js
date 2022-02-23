@@ -25,3 +25,15 @@ export const fetchTasks = createAsyncThunk(
         }
     }
 )
+
+export const deleteTask = createAsyncThunk(
+    'task/delete',
+    async ( id, {rejectWithValue}) => {
+        try {
+            const response = await TaskService.delete(id)
+            return response.data
+        } catch (e) {
+            return rejectWithValue(e.response?.data?.message)
+        }
+    }
+)

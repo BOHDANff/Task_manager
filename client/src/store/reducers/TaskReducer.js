@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTask, fetchTasks} from "./actionCreators/TaskActionCreator";
+import {createTask, deleteTask, fetchTasks} from "./actionCreators/TaskActionCreator";
 
 
 const initialState = {
@@ -16,6 +16,9 @@ export const taskSlice = createSlice({
         },
         [fetchTasks.fulfilled]: (state, action) => {
             state.tasks = action.payload
+        },
+        [deleteTask.fulfilled]: (state, action) => {
+            state.tasks = state.tasks.filter(task => task._id !== action.payload._id)
         },
     }
 })
