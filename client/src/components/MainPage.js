@@ -6,9 +6,9 @@ import {checkAuth} from "../store/reducers/actionCreators/AuthActionCreator";
 const MainPage = () => {
     const {user} = useSelector(state => state.auth)
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(checkAuth())
-    }, [user.confirmedAt])
+    // useEffect(() => {
+    //     dispatch(checkAuth())
+    // }, [user.confirmedAt])
     return (user.confirmedAt
             ? <>
                 <Navbar/>
