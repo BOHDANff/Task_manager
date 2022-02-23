@@ -49,5 +49,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const {setErrorMessage} = authSlice.actions
+// export const {setErrorMessage} = authSlice.actions
 export default authSlice.reducer
