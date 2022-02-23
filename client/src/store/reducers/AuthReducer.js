@@ -40,8 +40,7 @@ export const authSlice = createSlice({
             localStorage.setItem('token', action.payload.accessToken)
             state.isAuth = true
             state.user = action.payload.user
-            console.log(action.payload)
-            state.status = true
+            console.log(state.isAuth)
         },
         [checkAuth.rejected]: (state, action) => {
             console.log(action.payload)

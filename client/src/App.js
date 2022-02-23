@@ -4,20 +4,21 @@ import AuthPage from "./components/AuthPage";
 import MainPage from "./components/MainPage";
 import PrivatePath from "./hoc/PrivatePath";
 import {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {checkAuth} from "./store/reducers/actionCreators/AuthActionCreator";
 
 function App() {
     const dispatch = useDispatch()
     useEffect(() => {
-            if (localStorage.getItem('token')) {
-                dispatch(checkAuth())
-            }}, [dispatch])
+        if (localStorage.getItem('token')) {
+            dispatch(checkAuth())
+        }
+    }, [])
   return (
     <div className="App">
         <Routes>
-            <Route path="/auth" element={<AuthPage/>}/>
-            <Route path="/" element={<PrivatePath><MainPage/></PrivatePath>}/>
+            <Route path="/tasks/:id" element={<PrivatePath><MainPage/></PrivatePath>}/>
+            <Route path="/" element={<AuthPage/>}/>
         </Routes>
     </div>
   );
